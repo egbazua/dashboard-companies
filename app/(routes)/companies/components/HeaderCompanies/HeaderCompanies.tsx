@@ -12,6 +12,7 @@ import {
   DialogTrigger,
 } from "@/components/ui/dialog"
 import { CirclePlus } from "lucide-react"
+import FormCreateCustomer from "../FormCreateCustomer/FormCreateCustomer"
 
 const HeaderCompanies = () => {
   const [openCreateModal, setOpenCreateModal] = useState<boolean>(false)
@@ -28,6 +29,7 @@ const HeaderCompanies = () => {
             <DialogTitle>Create Customer</DialogTitle>
             <DialogDescription>Create and configure your customer</DialogDescription>
           </DialogHeader>
+          <FormCreateCustomer />
         </DialogContent>
       </Dialog>
     </div>
