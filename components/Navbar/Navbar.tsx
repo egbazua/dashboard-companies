@@ -11,8 +11,8 @@ import { ToggleTheme } from "../ToggleTheme"
 
 const Navbar = () => {
   return (
-    <div className="flex items-center px-6 gap-x-4 md:px-6 justify-between w-full bg-background border-b h-20">
-      <div className="block md:hidden">
+    <nav className="flex items-center px-6 gap-x-4 md:px-6 justify-between w-full bg-background border-b h-20">
+      <div className="block xl:hidden">
         <Sheet>
           <SheetTrigger className="flex items-center">
             <Menu />
@@ -30,7 +30,7 @@ const Navbar = () => {
         <ToggleTheme />
         <UserButton />
       </div>
-    </div>
+    </nav>
   )
 }
 
