@@ -7,6 +7,7 @@ import {
 import { UserButton } from "@clerk/nextjs"
 import { Menu, Search } from "lucide-react"
 import SidebarRoutes from "../SidebarRoutes/SidebarRoutes"
+import { ToggleTheme } from "../ToggleTheme"
 
 const Navbar = () => {
   return (
@@ -26,7 +27,7 @@ const Navbar = () => {
         <Search strokeWidth={1} className="absolute top-2 right-2" />
       </div>
       <div className="flex gap-x-2 items-center">
-        <p>Toogle Theme</p>
+        <ToggleTheme />
         <UserButton />
       </div>
     </div>
