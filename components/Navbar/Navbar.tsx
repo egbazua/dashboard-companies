@@ -10,7 +10,7 @@ import SidebarRoutes from "../SidebarRoutes/SidebarRoutes"
 
 const Navbar = () => {
   return (
-    <div className=" flex items-center px-6 gap-x-4 md:px-6 justify-between w-full bg-background border-b h-20">
+    <div className="flex items-center px-6 gap-x-4 md:px-6 justify-between w-full bg-background border-b h-20">
       <div className="block md:hidden">
         <Sheet>
           <SheetTrigger className="flex items-center">
