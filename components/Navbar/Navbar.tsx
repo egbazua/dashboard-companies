@@ -6,6 +6,7 @@ import {
 } from "@/components/ui/sheet"
 import { UserButton } from "@clerk/nextjs"
 import { Menu, Search } from "lucide-react"
+import SidebarRoutes from "../SidebarRoutes/SidebarRoutes"
 
 const Navbar = () => {
   return (
@@ -16,7 +17,7 @@ const Navbar = () => {
             <Menu />
           </SheetTrigger>
           <SheetContent side="left">
-            <p>Sidebar routes</p>
+            <SidebarRoutes />
           </SheetContent>
         </Sheet>
       </div>
