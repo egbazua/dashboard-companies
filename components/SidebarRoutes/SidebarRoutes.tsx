@@ -43,7 +43,7 @@ const SidebarRoutes = () => {
             </Button>
           </div>
           <Separator />
-          <footer className="mt-3 p-3 text-center">
+          <footer className="mt-3 p-3 text-center text-sm">
             2024. All rights reserved.
           </footer>
       </div>
