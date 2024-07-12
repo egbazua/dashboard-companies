@@ -1,5 +1,6 @@
 "use client"
 
+import { useState } from "react"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { useForm } from 'react-hook-form'
 import { z } from "zod"
@@ -14,8 +15,9 @@ import {
 } from "@/components/ui/form"
 import { Input } from "@/components/ui/input"
 import { FormCreateCustomerProps } from "./FormCreateCustomer.types"
-import { useState } from "react"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
+import { UploadButton } from "@/utils/uploadthing"
+import { toast } from "@/components/ui/use-toast"
 
 const formSchema = z.object({
   name: z.string(),
@@ -42,7 +44,7 @@ const FormCreateCustomer = ({ setOpenCreateModal }: FormCreateCustomerProps) => 
   })
 
   const { isValid } = form.formState
- 
+
   const onSubmit = async (values: z.infer<typeof formSchema>) => {
     console.log(values)
   }
@@ -75,14 +77,14 @@ const FormCreateCustomer = ({ setOpenCreateModal }: FormCreateCustomerProps) => 
                     <SelectTrigger>
                       <SelectValue placeholder="Select the country" />
                     </SelectTrigger>
-                    <SelectContent>
-                      <SelectItem value="spain">Spain</SelectItem>
-                      <SelectItem value="united-kingdom">United Kingdom</SelectItem>
-                      <SelectItem value="portugal">Portugal</SelectItem>
-                      <SelectItem value="greece">Greece</SelectItem>
-                      <SelectItem value="Italy">Italy</SelectItem>
-                    </SelectContent>
                   </FormControl>
+                  <SelectContent>
+                    <SelectItem value="spain">Spain</SelectItem>
+                    <SelectItem value="united-kingdom">United Kingdom</SelectItem>
+                    <SelectItem value="portugal">Portugal</SelectItem>
+                    <SelectItem value="greece">Greece</SelectItem>
+                    <SelectItem value="Italy">Italy</SelectItem>
+                  </SelectContent>
                 </Select>
                 <FormMessage />
               </FormItem>
@@ -134,14 +136,32 @@ const FormCreateCustomer = ({ setOpenCreateModal }: FormCreateCustomerProps) => 
               <FormItem>
                 <FormLabel>Profile Image</FormLabel>
                 <FormControl>
-                  <Input placeholder="B-1234567" type="text" {...field} />
+                  {
+                    photoUploaded ? (
+                      <p className="text-sm">Image uploaded!</p>
+                    ) : (
+                      <UploadButton
+                        className="bg-slate-600/20 text-slate-800 rounded-lg outline-dotted outline-3"
+                        {...field}
+                        endpoint="profileImage"
+                        onClientUploadComplete={(res) => {
+                          form.setValue("profileImage", res?.[0].url)
+                          toast({ title: "Photo uploaded! 🚀" })
+                          setPhotoUploaded(true)
+                        }}
+                        onUploadError={(error: Error) => {
+                          toast({ title: "Error uploading image! 👾" })
+                        }}
+                      />
+                    )
+                  }
                 </FormControl>
                 <FormMessage />
               </FormItem>
             )}
           />
         </div>
-        <Button type="submit">Submit</Button>
+        <Button type="submit" disabled={!isValid}>Submit</Button>
       </form>
     </Form>
   )
