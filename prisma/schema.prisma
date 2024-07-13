@@ -13,3 +13,45 @@ datasource db {
   url      = env("DATABASE_URL")
   relationMode = "prisma"
 }
+
+model Company {
+  id String @id @default(uuid())
+  userId String
+  name String
+  description String
+  profileImage String
+  cif String
+  phone String
+  country String
+  website String
+  contacts Contact[]
+  events Event[]
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Contact {
+  id String @id @default(uuid())
+  companyId String?
+  name String
+  role String
+  email String
+  phone String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  company Company? @relation(fields: [companyId], references: [id], onDelete: Cascade)
+  @@index([companyId])
+}
+
+model Event {
+  id String @id @default(uuid())
+  companyId String
+  title String
+  start DateTime
+  allDay Boolean
+  timeFormat String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  company Company @relation(fields: [companyId], references: [id])
+  @@index([companyId])
+}
