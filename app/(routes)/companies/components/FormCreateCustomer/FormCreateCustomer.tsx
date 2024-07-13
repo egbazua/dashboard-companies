@@ -1,6 +1,8 @@
 "use client"
 
 import { useState } from "react"
+import axios from 'axios'
+import { useRouter } from "next/navigation"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { useForm } from 'react-hook-form'
 import { z } from "zod"
@@ -29,6 +31,7 @@ const formSchema = z.object({
 })
 
 const FormCreateCustomer = ({ setOpenCreateModal }: FormCreateCustomerProps) => {
+  const router = useRouter()
   const [photoUploaded, setPhotoUploaded] = useState<boolean>(false)
 
   const form = useForm<z.infer<typeof formSchema>>({
@@ -46,7 +49,19 @@ const FormCreateCustomer = ({ setOpenCreateModal }: FormCreateCustomerProps) => 
   const { isValid } = form.formState
 
   const onSubmit = async (values: z.infer<typeof formSchema>) => {
-    console.log(values)
+    try {
+      axios.post("/api/company", values)
+
+      toast({title: "Company created ✅."})
+      router.refresh()
+
+      setOpenCreateModal(false)
+    } catch (error) {
+      toast({
+        title: "Something went wrong...",
+        variant: "destructive",
+      })
+    }
   }
 
   return (
