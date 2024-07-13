@@ -161,7 +161,7 @@ const FormCreateCustomer = ({ setOpenCreateModal }: FormCreateCustomerProps) => 
                         endpoint="profileImage"
                         onClientUploadComplete={(res) => {
                           form.setValue("profileImage", res?.[0].url)
-                          toast({ title: "Photo uploaded! 🚀" })
+                          toast({ title: "Image uploaded! 🚀" })
                           setPhotoUploaded(true)
                         }}
                         onUploadError={(error: Error) => {

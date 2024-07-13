@@ -7,11 +7,12 @@ export async function POST(req: Request) {
     const { userId } = auth()
     const data = await req.json()
 
-    if(!userId) return new NextResponse("Unauthorized", { status: 401 })
+    if (!userId) return new NextResponse("Unauthorized", { status: 401 })
 
     const company = await db.company.create({
       data: {
         userId,
+        description: '',
         ...data,
       }
     })
