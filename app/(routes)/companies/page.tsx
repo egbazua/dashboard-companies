@@ -1,10 +1,11 @@
 import HeaderCompanies from './components/HeaderCompanies/HeaderCompanies'
+import ListCompanies from './components/ListCompanies/ListCompanies'
 
 const Page = () => {
   return (
     <div>
       <HeaderCompanies />
-      <p>list companies</p>
+      <ListCompanies />
     </div>
   )
 }
