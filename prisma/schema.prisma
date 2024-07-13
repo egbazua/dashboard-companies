@@ -18,7 +18,7 @@ model Company {
   id String @id @default(uuid())
   userId String
   name String
-  description String
+  description String?
   profileImage String
   cif String
   phone String
