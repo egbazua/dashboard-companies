@@ -1,30 +1,17 @@
 "use client"
- 
-import * as React from "react"
+
+import React from "react"
 import {
   ColumnDef,
-  ColumnFiltersState,
   SortingState,
-  VisibilityState,
   flexRender,
   getCoreRowModel,
+  ColumnFiltersState,
   getFilteredRowModel,
-  getPaginationRowModel,
   getSortedRowModel,
   useReactTable,
-} from "@tanstack/react-table"
-import { ArrowUpDown, ChevronDown, ChevronUp, MoreHorizontal, Pencil } from "lucide-react"
-import { Button } from "@/components/ui/button"
-import {
-  DropdownMenu,
-  DropdownMenuCheckboxItem,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuLabel,
-  DropdownMenuSeparator,
-  DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu"
-import { Input } from "@/components/ui/input"
+  getPaginationRowModel,
+} from '@tanstack/react-table'
 import {
   Table,
   TableBody,
@@ -33,82 +20,100 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table"
-import Image from "next/image"
-import { Progress } from "@/components/ui/progress"
-import { formatPrice } from "@/lib/formatPrice"
-import { Company } from "@prisma/client"
-import Link from "next/link"
+import { Input } from "@/components/ui/input"
+import { Button } from "@/components/ui/button"
 
-export const columns: ColumnDef<Company>[] = [
-  {
-    accessorKey: "profileImage",
-    header: "Profile Image",
-    cell: ({ row }) => {
-      const image = row.getValue("profileImage")
+interface DataTableProps<TData, TValue> {
+  columns: ColumnDef<TData, TValue>[],
+  data: TData[]
+}
 
-      return (
-        <div className="px-3">
-          <Image 
-            src={typeof image === 'string' ? image: "/images/company-icon.png"}
-            width={40}
-            height={40}
-            alt="Image"
-            className="h-auto w-auto"
-          />
-        </div>
-      )
+export function DataTable<TData, TValue>({
+  columns,
+  data
+}: DataTableProps<TData, TValue>) {
+  const [sorting, setSorting] = React.useState<SortingState>([])
+  const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>(
+    []
+  )
+  const [isMounted, setIsMounted] = React.useState(false)
+
+  React.useEffect(() => {
+    setIsMounted(true)
+  }, [])
+
+  const table = useReactTable({
+    data,
+    columns,
+    getCoreRowModel: getCoreRowModel(),
+    getPaginationRowModel: getPaginationRowModel(),
+    onSortingChange: setSorting,
+    getSortedRowModel: getSortedRowModel(),
+    onColumnFiltersChange: setColumnFilters,
+    getFilteredRowModel: getFilteredRowModel(),
+    state: {
+      sorting,
+      columnFilters
     }
-  },
-  {
-    accessorKey: "name",
-    header: ({ column }) => {
-      return (
-        <Button variant='ghost' onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}>
-          Company name
-          <ArrowUpDown className="ml-2 h-4 w-4" />
-        </Button>
-      )
-    },
-  },
-  {
-    accessorKey: "cif",
-    header: "CIF",
-  },
-  {
-    accessorKey: "phone",
-    header: "Phone",
-  },
-  {
-    accessorKey: "country",
-    header: "Country",
-  },
-  {
-    accessorKey: "website",
-    header: "Website",
-  },
-  {
-    id: "actions",
-    header: "Actions",
-    cell: ({ row }) => {
-      const { id } = row.original
+  })
 
-      return (
-        <DropdownMenu>
-          <DropdownMenuTrigger>
-            <Button variant='ghost' className="w-8 h-4 p-0">
-              <span className="sr-only">Open menu</span>
-              <MoreHorizontal className="w-4 h-4" />
-            </Button>
-          </DropdownMenuTrigger>
-          <DropdownMenuContent align="end">
-            <Link href={`/company/${id}`}>
-              <DropdownMenuItem>
-                <Pencil className="w-4 h-4 mr-2" />
-              </DropdownMenuItem>
-            </Link>
-          </DropdownMenuContent>
-        </DropdownMenu>
-      )
-    },
-  },
-]
+  if (!isMounted) {
+    return null
+  }
+
+  return (
+    <div className="p-4 mt-4 rounded-lg shadow-md bg-background">
+      <div className="flex items-center mb-2">
+        <Input
+          placeholder="Filter the company..."
+          value={(table.getColumn("name")?.getFilterValue() as string) ?? ""}
+          onChange={(event) => table.getColumn("name")?.setFilterValue(event.target.value)}
+        />
+      </div>
+      <div className="border rounded-md">
+        <Table>
+          <TableHeader>
+            {table.getHeaderGroups().map((headerGroup) => (
+              <TableRow key={headerGroup.id}>
+                {headerGroup.headers.map((header) => {
+                  return (
+                    <TableHead key={header.id}>
+                      {header.isPlaceholder ? null : flexRender(header.column.columnDef.header, header.getContext())}
+                    </TableHead>
+                  )
+                })}
+              </TableRow>
+            ))}
+          </TableHeader>
+          <TableBody>
+            {table.getRowModel().rows?.length ? (
+              table.getRowModel().rows.map((row) => (
+                <TableRow key={row.id} data-state={row.getIsSelected() && "selected"}>
+                  {row.getVisibleCells().map((cell) => (
+                    <TableCell key={cell.id}>
+                      {flexRender(cell.column.columnDef.cell, cell.getContext())}
+                    </TableCell>
+                  ))}
+                </TableRow>
+              ))
+            ) : (
+              <TableRow>
+                <TableCell colSpan={columns.length} className="h-24 text-center">
+                  No results.
+                </TableCell>
+              </TableRow>
+            )}
+          </TableBody>
+        </Table>
+      </div>
+      <div className="flex items-center justify-end py-4 space-x-2">
+        <Button variant="outline" size="sm" onClick={() => table.previousPage()} disabled={!table.getCanPreviousPage()}>
+          Previous
+        </Button>
+        <Button variant="outline" size="sm" onClick={() => table.nextPage()} disabled={!table.getCanNextPage()}>
+          Next
+        </Button>
+      </div>
+    </div>
+  )
+}

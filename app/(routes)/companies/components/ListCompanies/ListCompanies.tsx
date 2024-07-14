@@ -1,6 +1,8 @@
 import { redirect } from 'next/navigation'
 import { auth } from '@clerk/nextjs/server'
 import { db } from '@/lib/db'
+import { columns } from './columns'
+import { DataTable } from './DataTable'
 
 const ListCompanies = async () => {
   const { userId } = auth()
@@ -17,7 +19,7 @@ const ListCompanies = async () => {
   })
 
   return (
-    <div>ListCompanies</div>
+    <DataTable columns={columns} data={companies} />
   )
 }
 
