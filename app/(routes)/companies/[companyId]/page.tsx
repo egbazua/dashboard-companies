@@ -1,15 +1,16 @@
 import { db } from "@/lib/db"
 import { auth } from "@clerk/nextjs/server"
 import { redirect } from "next/navigation"
+import Header from "./components/Header/Header"
 
-const page = async ({ companyId }: { companyId: string }) => {
+const page = async ({ params }: { params: { companyId: string } }) => {
   const { userId } = auth()
 
   if (!userId) return redirect("/")
 
   const company = await db.company.findUnique({
     where: {
-      id: companyId,
+      id: params.companyId,
       userId
     },
   })
@@ -18,7 +19,7 @@ const page = async ({ companyId }: { companyId: string }) => {
 
   return (
     <div>
-      <p>Header</p>
+      <Header />
       <p>Company information</p>
       <p>footer company</p>
     </div>
