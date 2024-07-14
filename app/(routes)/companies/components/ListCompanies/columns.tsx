@@ -26,7 +26,7 @@ export const columns: ColumnDef<Company>[] = [
       return (
         <div className="px-3">
           <Image 
-            src={typeof image === 'string' ? image: "/images/company-icon.png"}
+            src={typeof image === 'string' ? image : "/images/company-icon.png"}
             width={40}
             height={40}
             alt="Image"
