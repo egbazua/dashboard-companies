@@ -56,6 +56,11 @@ const Calendar = ({ companies, events }: CalendarProps) => {
         <div className='flex-1 calendar-cotainer'>
             <FullCalendar
               plugins={[dayGridPlugin, timeGridPlugin, interactionPlugin, listPlugin, multiMonthPlugin]}
+              headerToolbar={{
+                left: "prev,next today",
+                center: "title",
+                right: "timeGridDay,timeGridWeek,dayGridMonth,multiMonthYear,listMonth"
+              }}
               height="80vh"
               initialView='dayGridMonth'
               weekends={false}
