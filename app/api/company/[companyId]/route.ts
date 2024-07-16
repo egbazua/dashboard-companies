@@ -27,3 +27,24 @@ export async function PATCH(req: Request, { params }: { params: { companyId: str
     return new NextResponse("Internal error", { status: 500 })
   }
 }
+
+export async function DELETE(req: Request, { params }: { params: { companyId: string } }) {
+  try {
+    const { userId } = auth()
+    const { companyId } = params
+
+    if (!userId) return new NextResponse("Unauthorized", { status: 401 })
+
+    const deletedCompany = await db.company.delete({
+      where: {
+        id: companyId,
+      }
+    })
+
+    return NextResponse.json(deletedCompany)
+  } catch (error) {
+    console.error(error)
+
+    return new NextResponse('Internal error', { status: 500 })
+  }
+}
