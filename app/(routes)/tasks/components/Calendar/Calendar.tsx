@@ -13,6 +13,7 @@ import { DateSelectArg, EventContentArg } from '@fullcalendar/core/index.js'
 import { CalendarProps } from "./Calendar.types"
 import { formatDate } from '@/lib/formatDate'
 import { Toast } from '@/components/ui/toast'
+import ModalAddEvent from '../ModalAddEvent/ModalAddEvent'
 
 const Calendar = ({ companies, events }: CalendarProps) => {
   const router = useRouter()
@@ -41,6 +42,7 @@ const Calendar = ({ companies, events }: CalendarProps) => {
       <div className='md:flex gap-x-3'>
         <div className='w-[200px] relative'>
           <div className='overflow-auto absolute left-0 top-0 h-full w-0'>
+            <p className='mb-3 text-xl'>Tasks list</p>
             {
               events.map((currentEvent) => (
                 <div className='p-4 rounded-lg shadow-md mb-2 bg-slate-200 dark:bg-background' key={currentEvent.id}>
@@ -74,6 +76,13 @@ const Calendar = ({ companies, events }: CalendarProps) => {
             />
         </div>
       </div>
+      <ModalAddEvent
+        open={open}
+        setOpen={setOpen}
+        setOnSaveNewEvent={setOnSaveNewEvent}
+        companies={companies}
+        setNewEvent={setNewEvent}
+      />
     </div>
   )
 }
