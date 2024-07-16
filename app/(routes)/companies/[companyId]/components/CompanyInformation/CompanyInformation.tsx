@@ -3,6 +3,7 @@ import { CompanyInformationProps } from "./CompanyInformation.types"
 import { User } from "lucide-react"
 import CompanyForm from "../CompanyForm/CompanyForm"
 import NewContact from "../NewContact/NewContact"
+import ListContacts from "../ListContacts/ListContacts"
 
 const CompanyInformation = ({ company }: CompanyInformationProps) => {
   return (
@@ -29,7 +30,7 @@ const CompanyInformation = ({ company }: CompanyInformationProps) => {
             <NewContact />
           </div>
         </div>
-        <p>List contacts...</p>
+        <ListContacts company={company} />
       </div>
     </div>
   )
