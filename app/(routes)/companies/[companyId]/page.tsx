@@ -3,6 +3,7 @@ import { auth } from "@clerk/nextjs/server"
 import { redirect } from "next/navigation"
 import Header from "./components/Header/Header"
 import CompanyInformation from "./components/CompanyInformation/CompanyInformation"
+import FooterCompany from "./components/FooterCompany/FooterCompany"
 
 const page = async ({ params }: { params: { companyId: string } }) => {
   const { userId } = auth()
@@ -22,7 +23,7 @@ const page = async ({ params }: { params: { companyId: string } }) => {
     <div>
       <Header />
       <CompanyInformation company={company} />
-      <p>footer company</p>
+      <FooterCompany companyId={company.id}/>
     </div>
   )
 }
