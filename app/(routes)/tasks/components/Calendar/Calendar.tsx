@@ -12,15 +12,15 @@ import listPlugin from '@fullcalendar/list'
 import { DateSelectArg, EventContentArg } from '@fullcalendar/core/index.js'
 import { CalendarProps } from "./Calendar.types"
 import { formatDate } from '@/lib/formatDate'
-import { Toast } from '@/components/ui/toast'
 import ModalAddEvent from '../ModalAddEvent/ModalAddEvent'
+import { toast } from '@/components/ui/use-toast'
 
 const Calendar = ({ companies, events }: CalendarProps) => {
   const router = useRouter()
   const [open, setOpen] = useState<boolean>(false)
   const [onSaveNewEvent, setOnSaveNewEvent] = useState<boolean>(false)
   const [selectedItem, setSelectedItem] = useState<DateSelectArg>()
-  const [newEevent, setNewEvent] = useState({
+  const [newEvent, setNewEvent] = useState({
     eventName: "",
     companySelected: {
       name: "",
@@ -33,8 +33,60 @@ const Calendar = ({ companies, events }: CalendarProps) => {
     setSelectedItem(selected)
   }
 
-  const handleEventClick = () => {
+  useEffect(() => {
+    if (onSaveNewEvent && selectedItem?.view.calendar) {
+      const calendarApi = selectedItem.view.calendar
+      calendarApi.unselect()
 
+      const newEventPrisma = {
+        companyId: newEvent.companySelected.id,
+        title: newEvent.eventName,
+        start: new Date(selectedItem.start),
+        allDay: false,
+        timeFormat: 'H(:mm)'
+      }
+
+      axios.post(`/api/company/${newEvent.companySelected.id}/event`, newEventPrisma)
+        .then(() => {
+          toast({ title: "Event created" })
+
+          router.refresh()
+        })
+        .catch(error => {
+          toast({
+            title: "Error creating element",
+            variant: 'destructive'
+          })
+        })
+
+      setNewEvent({
+        eventName: '',
+        companySelected: {
+          name: '',
+          id: '',
+        }
+      })
+
+      setOnSaveNewEvent(false)
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [onSaveNewEvent, selectedItem, event])
+
+  const handleEventClick = async (selected: any) => {
+    if (window.confirm(`Are you sure you want to delete this event ${selected.event.title}`)) {
+      try {
+        await axios.delete(`/api/event/${selected.event._def.publicId}`)
+
+        toast({ title: 'Event deleted' })
+
+        router.refresh()
+      } catch (error) {
+        toast({
+          title: "Something went wrong",
+          variant: "destructive",
+        })
+      }
+    }
   }
 
   return (
@@ -56,24 +108,24 @@ const Calendar = ({ companies, events }: CalendarProps) => {
           </div>
         </div>
         <div className='flex-1 calendar-cotainer'>
-            <FullCalendar
-              plugins={[dayGridPlugin, timeGridPlugin, interactionPlugin, listPlugin, multiMonthPlugin]}
-              headerToolbar={{
-                left: "prev,next today",
-                center: "title",
-                right: "timeGridDay,timeGridWeek,dayGridMonth,multiMonthYear,listMonth"
-              }}
-              height="80vh"
-              initialView='dayGridMonth'
-              weekends={false}
-              events={events}
-              eventContent={renderEventContent}
-              editable={true}
-              selectable={true}
-              selectMirror={true}
-              select={handleDateClick}
-              eventClick={handleEventClick}
-            />
+          <FullCalendar
+            plugins={[dayGridPlugin, timeGridPlugin, interactionPlugin, listPlugin, multiMonthPlugin]}
+            headerToolbar={{
+              left: "prev,next today",
+              center: "title",
+              right: "timeGridDay,timeGridWeek,dayGridMonth,multiMonthYear,listMonth"
+            }}
+            height="80vh"
+            initialView='dayGridMonth'
+            weekends={false}
+            events={events}
+            eventContent={renderEventContent}
+            editable={true}
+            selectable={true}
+            selectMirror={true}
+            select={handleDateClick}
+            eventClick={handleEventClick}
+          />
         </div>
       </div>
       <ModalAddEvent
