@@ -105,7 +105,7 @@ const Calendar = ({ companies, events }: CalendarProps) => {
             }
           </div>
         </div>
-        <div className='flex-1 calendar-cotainer'>
+        <div className='flex-1 calendar-container'>
           <FullCalendar
             plugins={[dayGridPlugin, timeGridPlugin, interactionPlugin, listPlugin, multiMonthPlugin]}
             headerToolbar={{
