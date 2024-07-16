@@ -1,6 +1,6 @@
 'use client'
 
-import { 
+import {
   Dialog,
   DialogContent,
   DialogHeader,
@@ -8,6 +8,7 @@ import {
 } from '@/components/ui/dialog'
 
 import { ModalAddEventprops } from "./ModalAddEvent.types"
+import { FormEvent } from '../FormEvent'
 
 const ModalAddEvent = ({ open, companies, setNewEvent, setOnSaveNewEvent, setOpen }: ModalAddEventprops) => {
   return (
@@ -16,7 +17,12 @@ const ModalAddEvent = ({ open, companies, setNewEvent, setOnSaveNewEvent, setOpe
         <DialogHeader>
           <DialogTitle> Add a new event</DialogTitle>
         </DialogHeader>
-        <p>Form</p>
+        <FormEvent
+          setOnSaveNewEvent={setOnSaveNewEvent}
+          companies={companies}
+          setNewEvent={setNewEvent}
+          setOpen={setOpen}
+        />
       </DialogContent>
     </Dialog>
   )
