@@ -23,7 +23,7 @@ import { toast } from "@/components/ui/use-toast"
 
 const FormContact = ({ setOpen }: FormContactProps) => {
 
-  const params = useParams<{ companyId: string }>
+  const params = useParams<{ companyId: string }>()
   const router = useRouter()
 
   const form = useForm<z.infer<typeof formSchema>>({
@@ -37,7 +37,22 @@ const FormContact = ({ setOpen }: FormContactProps) => {
   })
 
   const onSubmit = async (values: z.infer<typeof formSchema>) => {
-    console.log("on submit")
+    try {
+      axios.post(`/api/company/${params.companyId}/contact`, values)
+
+      toast({
+        title: "Contact created!"
+      })
+
+      router.refresh()
+
+      setOpen(false)
+    } catch (error) {
+      toast({
+        title: "There was an error",
+        variant: "destructive",
+      })
+    }
   }
 
   return (
